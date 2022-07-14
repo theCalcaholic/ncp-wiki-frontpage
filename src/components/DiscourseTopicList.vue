@@ -47,6 +47,15 @@ function toggleSelectTag(tag: string) {
 function matchesFilter(tags: Array<string>) {
   return selectedTags.value.length == 0 || selectedTags.value.every(tags.includes.bind(tags))
 }
+
+const filteredTopics = computed(() => {
+  let filtered = new Map<string, Array<any>>();
+  for (let [key, entry] of topics.value.entries()) {
+    filtered.set(key, entry.filter(e => matchesFilter(e.tags)));
+  }
+  return filtered;
+})
+
 </script>
 
 <template>
@@ -61,8 +70,8 @@ function matchesFilter(tags: Array<string>) {
   </ul>
   <h2>Articles</h2>
   <ul>
-    <div class="section" v-for="section in topics">
-      <h2>{{ section[0] }}</h2>
+    <div class="section" v-for="section in filteredTopics">
+      <h2 v-if="section[1].length !== 0">{{ section[0] }}</h2>
       <template v-for="topic in section[1]">
         <DiscourseTopic v-if="matchesFilter(topic.tags)" :base-url="redirectUrl" :topic="topic"></DiscourseTopic>
       </template>

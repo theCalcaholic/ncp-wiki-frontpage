@@ -27,4 +27,5 @@ coverage
 *.sln
 *.sw?
 *.iml
+.idea/
 config.json
