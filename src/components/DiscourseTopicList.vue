@@ -2,7 +2,6 @@
 import type {Ref} from "vue";
 import {ref, computed, onMounted} from "vue";
 import DiscourseTopic from "./DiscourseTopic.vue"
-import logoUrl from "../assets/logo.svg";
 
 const props = defineProps<{
   apiUrl: string,
@@ -84,8 +83,11 @@ const filteredTopics = computed(() => {
 <template>
 
   <div :class="`filter-container${showFilters ? '' : ' hidden'}`">
-    <div :class="`filter-controller`" @click="showFilters = !showFilters"></div>
-    <div :class="`search`">
+    <div class="filter-controller-container">
+      <div class="filter-controller-label">Search & Filter</div>
+      <div class="filter-controller" @click="showFilters = !showFilters"></div>
+    </div>
+    <div class="search">
       <h4>Search</h4>
       <input type="text" v-model="searchPhrase" @input="performSearch(searchPhrase)">
     </div>
@@ -102,7 +104,7 @@ const filteredTopics = computed(() => {
     </div>
   </div>
   <h2>Articles</h2>
-  <ul>
+  <ul class="sections">
     <li class="section" v-if="searchState === 'RUNNING' || filteredTopics.size === 0">
       Loading...
     </li>
@@ -121,14 +123,15 @@ const filteredTopics = computed(() => {
 
 li.discourse-tag {
   display: inline-block;
-  background-color: #2c3e50;
+  background-color: var(--color-foreground);
   cursor: pointer;
   list-style: none;
   padding: 4px;
   margin: 2px;
+  color: var(--color-text-contrast);
 }
 li.discourse-tag.selected {
-  background-color: #2c8050
+  background-color: var(--color-foreground-accent)
 }
 
 ul.taglist {
@@ -137,11 +140,14 @@ ul.taglist {
   flex-flow: wrap;
   padding-left: 0;
 }
+ul.sections {
+  list-style: none;
+}
 
 .section {
   margin-bottom: 2em;
   margin-top: 1em;
-  background-color: #2c3e5080;
+  background-color: rgba(var(--color-foreground-raw), 0.5);
   padding: 1em;
 }
 
@@ -152,13 +158,13 @@ ul.taglist {
   align-content: space-evenly;
   padding-bottom: 1em;
   margin-bottom: 1em;
-  border-bottom: white double thin;
+  border-bottom: var(--color-border-hover) double thin;
   transition: gap .25s;
 }
 
 .filter-controller {
-  width: 32px;
-  height: 32px;
+  width: calc(40px - 1em);
+  height: calc(40px - 1em);
   background-image: url(../assets/logo.svg);
   flex-shrink: 0;
   flex-grow: 0;
@@ -212,22 +218,57 @@ ul.taglist {
   width: 100%;
   height: 2em;
   line-height: 2em;
-  background-color: #6588aa;
-  border: white 0 solid;
+  background-color: var(--color-foreground-light);
+  border: var(--color-foreground) 3px solid;
   border-radius: 10px;
-  color: white;
+  color: var(--color-text);
   font-weight: bold;
   font-size: 1.2em;
   padding: 3px 6px;
+  outline: none;
+}
+
+
+.filter-container .filter-controller-label {
+  visibility: hidden;
+  width: 0;
+  margin-right: 0;
+  opacity: 0;
+  transition: opacity .25s;
+  white-space: nowrap;
 }
 
 @media (min-width: 1024px) {
   .filter-container {
-    flex-direction: row;
+    flex-direction: row-reverse;
   }
 
   .filter-controller {
     align-self: start;
+  }
+  .filter-container .filter-controller-container {
+    width: 40px;
+    height: 40px;
+    transition: width .25s;
+    float: right;
+    flex-shrink: 2;
+    display: flex;
+  }
+  .filter-container.hidden .filter-controller-container {
+    width: 100%;
+    transition: width 1s .25s;
+  }
+  .filter-container.hidden .filter-controller {
+    float: right;
+  }
+  .filter-container.hidden .filter-controller-label {
+    visibility: visible;
+    width: calc(100% - 40px);
+    float: right;
+    margin-right: 1em;
+    color: var(--color-text);
+    opacity: 1;
+    transition: opacity .5s .25s, visibility .7s 0s;
   }
 }
 
