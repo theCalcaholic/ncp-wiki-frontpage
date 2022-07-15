@@ -165,15 +165,18 @@ ul.sections {
 .filter-controller {
   width: calc(40px - 1em);
   height: calc(40px - 1em);
-  background-image: url(../assets/logo.svg);
+  background-image: var(--dropdown-logo);
+  background-size: contain;
   flex-shrink: 0;
   flex-grow: 0;
   cursor: pointer;
   align-self: end;
+  transition: transform .25s;
 }
 
 .filter-container.hidden .filter-controller {
-  transform: rotate(180deg);
+  transform: rotate(90deg);
+  transition: transform .25s;
 }
 
 
@@ -247,8 +250,8 @@ ul.sections {
     align-self: start;
   }
   .filter-container .filter-controller-container {
-    width: 40px;
-    height: 40px;
+    width: var(--dropdown-button-size);
+    height: var(--dropdown-button-size);
     transition: width .25s;
     float: right;
     flex-shrink: 2;
@@ -263,12 +266,12 @@ ul.sections {
   }
   .filter-container.hidden .filter-controller-label {
     visibility: visible;
-    width: calc(100% - 40px);
+    width: calc(100% - var(--dropdown-button-size));
     float: right;
     margin-right: 1em;
     color: var(--color-text);
     opacity: 1;
-    transition: opacity .5s .25s, visibility .7s 0s;
+    transition: opacity .5s .25s, visibility .5s 0s;
   }
 }
 
