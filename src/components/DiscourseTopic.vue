@@ -29,4 +29,8 @@ li.topic {
   margin-top: 2em;
   border-top: white dotted thin;
 }
+
+.topic h3 {
+  margin-bottom: .5em;
+}
 </style>

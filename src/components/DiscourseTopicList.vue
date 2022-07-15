@@ -111,7 +111,7 @@ const filteredTopics = computed(() => {
     <template v-else v-for="section in (searchState === 'COMPLETE' ? searchResults : filteredTopics)">
       <li class="section" v-if="section[1].length !== 0 || searchState === 'COMPLETE'">
         <h2 >{{ section[0] }}</h2>
-        <ul v-for="topic in section[1]">
+        <ul class="topics" v-for="topic in section[1]">
           <DiscourseTopic v-if="matchesFilter(topic.tags)" :base-url="redirectUrl" :topic="topic"></DiscourseTopic>
         </ul>
       </li>
@@ -140,8 +140,9 @@ ul.taglist {
   flex-flow: wrap;
   padding-left: 0;
 }
-ul.sections {
+ul.sections, ul.topics {
   list-style: none;
+  padding-left: 0;
 }
 
 .section {
@@ -170,7 +171,6 @@ ul.sections {
   flex-shrink: 0;
   flex-grow: 0;
   cursor: pointer;
-  align-self: end;
   transition: transform .25s;
 }
 
@@ -232,6 +232,13 @@ ul.sections {
 }
 
 
+
+.filter-container .filter-controller-container {
+  display: flex;
+  flex-direction: row-reverse;
+
+}
+
 .filter-container .filter-controller-label {
   visibility: hidden;
   width: 0;
@@ -242,17 +249,6 @@ ul.sections {
   text-align: right;
 }
 
-.filter-container .filter-controller-container {
-  display: flex;
-  flex-direction: row-reverse;
-
-}
-
-/* */
-
-.filter-controller {
-  align-self: start;
-}
 .filter-container.hidden .filter-controller-label {
   visibility: visible;
   width: calc(100% - var(--dropdown-button-size));
@@ -264,6 +260,9 @@ ul.sections {
 }
 
 @media (min-width: 1024px) {
+  ul.sections, ul.topics {
+    padding-left: 40px;
+  }
   .filter-container {
     flex-direction: row-reverse;
   }

@@ -66,7 +66,7 @@
     --color-foreground-raw: var(--vt-c-indigo-raw);
     --color-foreground-light: var(--vt-c-indigo);
     --color-foreground-accent: var(--vt-c-green);
-    --color-link-text: var(--vt-c-green);
+    --color-link-text: var(--vt-c-ultralightblue);
 
     --color-border: var(--vt-c-divider-dark-2);
     --color-border-hover: var(--vt-c-divider-dark-1);
