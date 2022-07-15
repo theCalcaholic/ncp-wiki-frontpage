@@ -51,7 +51,7 @@
   --color-link-text: var(--vt-c-text-accent-light);
 
   --section-gap: 160px;
-  --dropdown-logo: url(dropdown-dark.svg);
+  --dropdown-logo: url(dropdown-light.svg);
 
   --dropdown-button-size: 48px;
 }
@@ -74,7 +74,7 @@
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-1);
     --color-text-contrast: var(--vt-c-black);
-    --dropdown-logo: url(dropdown-light.svg);
+    --dropdown-logo: url(dropdown-dark.svg);
   }
 }
 

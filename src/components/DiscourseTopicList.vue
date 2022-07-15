@@ -84,8 +84,8 @@ const filteredTopics = computed(() => {
 
   <div :class="`filter-container${showFilters ? '' : ' hidden'}`">
     <div class="filter-controller-container">
-      <div class="filter-controller-label">Search & Filter</div>
       <div class="filter-controller" @click="showFilters = !showFilters"></div>
+      <div class="filter-controller-label">Search & Filter</div>
     </div>
     <div class="search">
       <h4>Search</h4>
@@ -176,7 +176,7 @@ ul.sections {
 
 .filter-container.hidden .filter-controller {
   transform: rotate(90deg);
-  transition: transform .25s;
+  transition: transform .5s;
 }
 
 
@@ -239,15 +239,37 @@ ul.sections {
   opacity: 0;
   transition: opacity .25s;
   white-space: nowrap;
+  text-align: right;
+}
+
+.filter-container .filter-controller-container {
+  display: flex;
+  flex-direction: row-reverse;
+
+}
+
+/* */
+
+.filter-controller {
+  align-self: start;
+}
+.filter-container.hidden .filter-controller-label {
+  visibility: visible;
+  width: calc(100% - var(--dropdown-button-size));
+  float: right;
+  margin-right: 1em;
+  color: var(--color-text);
+  opacity: 1;
+  transition: opacity .5s .25s, visibility .5s 0s;
 }
 
 @media (min-width: 1024px) {
   .filter-container {
     flex-direction: row-reverse;
   }
-
-  .filter-controller {
-    align-self: start;
+  .filter-container.hidden .filter-controller-container {
+    width: 100%;
+    transition: width 1s .25s;
   }
   .filter-container .filter-controller-container {
     width: var(--dropdown-button-size);
@@ -255,23 +277,9 @@ ul.sections {
     transition: width .25s;
     float: right;
     flex-shrink: 2;
-    display: flex;
-  }
-  .filter-container.hidden .filter-controller-container {
-    width: 100%;
-    transition: width 1s .25s;
   }
   .filter-container.hidden .filter-controller {
     float: right;
-  }
-  .filter-container.hidden .filter-controller-label {
-    visibility: visible;
-    width: calc(100% - var(--dropdown-button-size));
-    float: right;
-    margin-right: 1em;
-    color: var(--color-text);
-    opacity: 1;
-    transition: opacity .5s .25s, visibility .5s 0s;
   }
 }
 
