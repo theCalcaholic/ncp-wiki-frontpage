@@ -16,7 +16,7 @@ const selectedTags: Ref<Array<string>> = ref([]);
 const searchPhrase: Ref<string> = ref("");
 const searchResults: Ref<Map<string, Array<any>>> = ref(new Map<string, Array<Object>>());
 const searchState: Ref<'IDLE' | 'RUNNING' | 'COMPLETE'> = ref('IDLE');
-const showFilters: Ref<boolean> = ref(true);
+const showFilters: Ref<boolean> = ref(window.matchMedia("(min-width: 1024px)").matches);
 
 const regexStartsWithNumber = /^\d-/
 
