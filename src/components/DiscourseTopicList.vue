@@ -42,7 +42,7 @@ onMounted(async () => {
 });
 
 async function performSearch(query: string) {
-  if (query.length === 0) {
+  if (query.length < 3) {
     searchState.value = 'IDLE';
     searchResults.value.clear();
     return
@@ -83,9 +83,9 @@ const filteredTopics = computed(() => {
 <template>
 
   <div :class="`filter-container${showFilters ? '' : ' hidden'}`">
-    <div class="filter-controller-container">
-      <div class="filter-controller" @click="showFilters = !showFilters"></div>
-      <div class="filter-controller-label">Search & Filter</div>
+    <div class="filter-controller-container" @click="showFilters = !showFilters">
+      <div class="filter-controller"></div>
+      <div class="filter-controller-label">Search &amp; Filter</div>
     </div>
     <div class="search">
       <h4>Search</h4>

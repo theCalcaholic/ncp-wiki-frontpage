@@ -1,5 +1,22 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView } from 'vue-router';
+import type {Ref} from "vue";
+import {computed, ref} from "vue";
+
+const logoLightUrl = new URL('./assets/ncp-logo-dark.png', import.meta.url);
+const logoDarkUrl = new URL('./assets/ncp-logo-light.png', import.meta.url);
+
+const darkThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+const logoUrl: Ref<URL> = ref(darkThemeQuery.matches ? logoDarkUrl : logoLightUrl);
+
+darkThemeQuery.addEventListener("change", e => {
+  if (e.matches)
+    logoUrl.value = logoDarkUrl
+  else
+    logoUrl.value = logoLightUrl
+})
+
 </script>
 
 <template>
@@ -14,7 +31,7 @@ import { RouterLink, RouterView } from 'vue-router'
 <!--    </div>-->
 <!--  </header>-->
 
-  <header><h1>NextcloudPi Documentation</h1></header>
+  <header><h1>NextcloudPi Documentation</h1><img class="logo" :src="logoUrl.toString()" alt="Logo"></header>
   <RouterView />
 </template>
 
@@ -23,11 +40,17 @@ header {
   line-height: 1.5;
   max-height: 100vh;
   margin-bottom: 4em;
+  display: flex;
 }
 
 .logo {
   display: block;
-  margin: 0 auto 2rem;
+  width: 4rem;
+  flex-shrink: 0;
+  height: 4rem;
+}
+.header h1 {
+  flex-shrink: 1;
 }
 
 nav {
@@ -59,11 +82,12 @@ nav a:first-of-type {
   header {
     display: flex;
     place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+    justify-content: space-between;
+
   }
 
   .logo {
-    margin: 0 2rem 0 0;
+    margin: 0 2rem 0 2rem;
   }
 
   header .wrapper {
