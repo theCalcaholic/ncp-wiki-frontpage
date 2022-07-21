@@ -53,7 +53,7 @@
   --section-gap: 160px;
   --dropdown-logo: url(dropdown-light.svg);
 
-  --dropdown-button-size: 48px;
+  --dropdown-button-size: 28px;
 }
 
 @media (prefers-color-scheme: dark) {

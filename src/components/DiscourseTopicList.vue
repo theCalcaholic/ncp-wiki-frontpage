@@ -22,23 +22,50 @@ const regexStartsWithNumber = /^\d-/
 
 onMounted(async () => {
 
-  let response = await fetch(`${props.apiUrl}/c/${props.category}.json`);
-  if (!response.ok)
-    throw new Error("Failed to fetch discourse posts!");
-  let data = await response.json();
-  topTags.value = data.topic_list.top_tags.filter((t: string) => !regexStartsWithNumber.test(t)).sort();
-  sections.value = data.topic_list.top_tags.filter((t: string) => regexStartsWithNumber.test(t)).sort();
-  topics.value = sections.value.reduce((map: Map<string, Array<Object>>, section: string) => {
+  let pageCount = 0;
+  let more_topics_url: String|undefined = `/c/${props.category}.json?page=${pageCount}`
+
+  let fTags: Array<string> = [];
+  let fSections: Array<string> = [];
+  let fTopics: Array<any> = [];
+
+  while (more_topics_url !== undefined) {
+    let response: Response = await fetch(`${props.apiUrl}/c/${props.category}.json?page=${pageCount}`);
+    if (!response.ok)
+      throw new Error("Failed to fetch discourse posts!");
+    let data = await response.json();
+    fTopics = fTopics.concat(data.topic_list.topics);
+    data.topic_list.topics.forEach((topic: any) => {
+      fTags = fTags.concat(topic.tags)
+    });
+
+    more_topics_url = data.topic_list.more_topics_url
+    pageCount++;
+  }
+  fTags = [...new Set(fTags)];
+  fTags.sort();
+  fSections = fTags.filter((t: string) => regexStartsWithNumber.test(t));
+  fTags = fTags.filter((t: string) => !regexStartsWithNumber.test(t));
+
+  const newTopics = fSections.reduce((map: Map<string, Array<Object>>, section: string) => {
+    console.log(section);
     const sectionTitle = section
         .replace(regexStartsWithNumber, "")
         .split(/[_ ]/)
         .map(s => s[0].toUpperCase() + s.substring(1))
         .join(" ");
-    map.set(sectionTitle, data.topic_list.topics.filter((topic: any) => topic.tags.includes(section)));
+    map.set(sectionTitle, fTopics.filter((topic: any) => topic.tags.includes(section)));
     return map;
   }, new Map<string, Array<Object>>());
-  topics.value.set("Other", data.topic_list.topics
+
+  topics.value.set("Other", fTopics
       .filter((topic: any) => topic.tags.every((t: string) => !sections.value.includes(t))));
+  console.log("sections", fSections);
+  console.log("topTags", fTags);
+
+  topTags.value = fTags;
+  sections.value = fSections;
+  topics.value = newTopics;
 });
 
 async function performSearch(query: string) {
@@ -68,6 +95,10 @@ function toggleSelectTag(tag: string) {
 
 function matchesFilter(tags: Array<string>) {
   return selectedTags.value.length == 0 || selectedTags.value.every(tags.includes.bind(tags))
+}
+
+function findSection(tags: Array<string>) {
+  return tags.find((t: string) => regexStartsWithNumber.test(t))
 }
 
 const filteredTopics = computed(() => {
@@ -110,7 +141,7 @@ const filteredTopics = computed(() => {
     </li>
     <template v-else v-for="section in (searchState === 'COMPLETE' ? searchResults : filteredTopics)">
       <li class="section" v-if="section[1].length !== 0 || searchState === 'COMPLETE'">
-        <h2 >{{ section[0] }}</h2>
+        <h2 ><a :href="`${redirectUrl}/tag/${findSection(section[1][0]?.tags)}`">{{ section[0] }}</a></h2>
         <ul class="topics" v-for="topic in section[1]">
           <DiscourseTopic v-if="matchesFilter(topic.tags)" :base-url="redirectUrl" :topic="topic"></DiscourseTopic>
         </ul>
@@ -164,13 +195,12 @@ ul.sections, ul.topics {
 }
 
 .filter-controller {
-  width: calc(40px - 1em);
-  height: calc(40px - 1em);
+  width: var(--dropdown-button-size); /* calc(40px - 1em); */
+  height: var(--dropdown-button-size); /* calc(40px - 1em); */
   background-image: var(--dropdown-logo);
   background-size: contain;
   flex-shrink: 0;
   flex-grow: 0;
-  cursor: pointer;
   transition: transform .25s;
 }
 
@@ -236,6 +266,7 @@ ul.sections, ul.topics {
 .filter-container .filter-controller-container {
   display: flex;
   flex-direction: row-reverse;
+  cursor: pointer;
 
 }
 
