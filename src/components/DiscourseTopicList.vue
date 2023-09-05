@@ -28,12 +28,17 @@ onMounted(async () => {
   let fTags: Array<string> = [];
   let fSections: Array<string> = [];
   let fTopics: Array<any> = [];
+  let firstTopicId = -1
 
-  while (more_topics_url !== undefined) {
+  while (more_topics_url !== undefined && pageCount < 10) {
     let response: Response = await fetch(`${props.apiUrl}/c/${props.category}.json?page=${pageCount}`);
     if (!response.ok)
       throw new Error("Failed to fetch discourse posts!");
     let data = await response.json();
+    if (data.topic_list.topics[0].id === firstTopicId) {
+      break;
+    }
+    firstTopicId = data.topic_list.topics[0].id;
     fTopics = fTopics.concat(data.topic_list.topics);
     data.topic_list.topics.forEach((topic: any) => {
       fTags = fTags.concat(topic.tags)
