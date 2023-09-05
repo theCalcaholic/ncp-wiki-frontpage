@@ -3,8 +3,8 @@ import { RouterLink, RouterView } from 'vue-router';
 import type {Ref} from "vue";
 import {computed, ref} from "vue";
 
-const logoLightUrl = new URL('./assets/ncp-logo-dark.png', import.meta.url);
-const logoDarkUrl = new URL('./assets/ncp-logo-light.png', import.meta.url);
+const logoLightUrl = new URL('./assets/ncp-logo-dark.svg', import.meta.url);
+const logoDarkUrl = new URL('./assets/ncp-logo-light.svg', import.meta.url);
 
 const darkThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
