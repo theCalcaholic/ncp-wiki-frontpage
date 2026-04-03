@@ -41,7 +41,7 @@ onMounted(async () => {
     firstTopicId = data.topic_list.topics[0].id;
     fTopics = fTopics.concat(data.topic_list.topics);
     data.topic_list.topics.forEach((topic: any) => {
-      fTags = fTags.concat(topic.tags)
+      fTags = fTags.concat(topic.tags.map((t: {id: number, name: string, slug: string}) => t.slug))
     });
 
     more_topics_url = data.topic_list.more_topics_url
@@ -59,7 +59,7 @@ onMounted(async () => {
         .split(/[_ ]/)
         .map(s => s[0].toUpperCase() + s.substring(1))
         .join(" ");
-    map.set(sectionTitle, fTopics.filter((topic: any) => topic.tags.includes(section)));
+    map.set(sectionTitle, fTopics.filter((topic: any) => topic.tags.find((t: {id: number, name: string, slug: string}) => t.slug === section)));
     return map;
   }, new Map<string, Array<Object>>());
 
@@ -67,6 +67,7 @@ onMounted(async () => {
       .filter((topic: any) => topic.tags.every((t: string) => !sections.value.includes(t))));
   console.log("sections", fSections);
   console.log("topTags", fTags);
+  console.log("topics", newTopics);
 
   topTags.value = fTags;
   sections.value = fSections;
